@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+
+{% block title %}Modifier l'utilisateur{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Modifier l'utilisateur</h2>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('auth.edit_user', user_id=user.id) }}">
+            {{ form.hidden_tag() }}
+            
+            <div class="form-group">
+                {{ form.username.label }}
+                {{ form.username(class="form-control") }}
+                {% if form.username.errors %}
+                    {% for error in form.username.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                {{ form.email.label }}
+                {{ form.email(class="form-control") }}
+                {% if form.email.errors %}
+                    {% for error in form.email.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                {{ form.role.label }}
+                {{ form.role(class="form-control") }}
+                {% if form.role.errors %}
+                    {% for error in form.role.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label>Date d'inscription</label>
+                <input type="text" class="form-control" value="{{ user.created_at.strftime('%d/%m/%Y') }}" readonly>
+            </div>
+            
+            <div class="form-group">
+                {{ form.submit(class="btn btn-primary") }}
+                <a href="{{ url_for('auth.users') }}" class="btn btn-secondary">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

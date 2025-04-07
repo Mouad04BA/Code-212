@@ -1,0 +1,252 @@
+{% extends 'layout.html' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Tableau de bord</h1>
+
+<!-- Stats Dashboard -->
+<div class="row">
+    <div class="col-md-3">
+        <div class="stats-card revenue">
+            <h3>Total des produits</h3>
+            <p class="amount">{{ total_revenue|round(2)|number_format(2, ',', ' ') }} MAD</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card expense">
+            <h3>Total des charges</h3>
+            <p class="amount">{{ total_expenses|round(2)|number_format(2, ',', ' ') }} MAD</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card profit">
+            <h3>Résultat net</h3>
+            <p class="amount">{{ net_income|round(2)|number_format(2, ',', ' ') }} MAD</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card asset">
+            <h3>Total des actifs</h3>
+            <p class="amount">{{ total_assets|round(2)|number_format(2, ',', ' ') }} MAD</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Recent Journal Entries -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <span>Écritures récentes</span>
+                <a href="{{ url_for('accounting.journal') }}" class="btn btn-sm btn-primary">Voir tout</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Référence</th>
+                                <th>Description</th>
+                                <th class="text-right">Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if recent_entries %}
+                                {% for entry in recent_entries %}
+                                <tr>
+                                    <td>{{ entry.date.strftime('%d/%m/%Y') }}</td>
+                                    <td>{{ entry.reference or '-' }}</td>
+                                    <td>{{ entry.description or '-' }}</td>
+                                    <td class="text-right">
+                                        {% set total = namespace(value=0) %}
+                                        {% for line in entry.lines %}
+                                            {% if line.debit > 0 %}
+                                                {% set total.value = total.value + line.debit %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ total.value|round(2)|number_format(2, ',', ' ') }} MAD
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center">Aucune écriture récente</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Due Invoices -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <span>Factures à échéance</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>N° Facture</th>
+                                <th>Type</th>
+                                <th>Échéance</th>
+                                <th class="text-right">Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if due_invoices %}
+                                {% for invoice in due_invoices %}
+                                <tr>
+                                    <td>{{ invoice.invoice_number }}</td>
+                                    <td>
+                                        {% if invoice.invoice_type == 'client' %}
+                                            <span class="badge badge-success">Client</span>
+                                        {% else %}
+                                            <span class="badge badge-info">Fournisseur</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ invoice.due_date.strftime('%d/%m/%Y') }}</td>
+                                    <td class="text-right">{{ invoice.total_ttc|round(2)|number_format(2, ',', ' ') }} MAD</td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center">Aucune facture à échéance</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Revenue and Expense Chart -->
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <span>Évolution des produits et charges</span>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="revenue-expense-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Assets and Liabilities -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <span>Répartition actif / passif</span>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="assets-liabilities-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Expense Breakdown -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <span>Répartition des charges</span>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="expense-breakdown-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upcoming Deadlines -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <span>Échéances à venir</span>
+                <a href="{{ url_for('deadlines.index') }}" class="btn btn-sm btn-primary">Voir tout</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="upcoming-deadlines-table">
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Type</th>
+                                <th>Échéance</th>
+                                <th>Jours restants</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="text-center">Chargement des échéances...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Fetch upcoming deadlines
+    fetch('/deadlines/upcoming')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.querySelector('#upcoming-deadlines-table tbody');
+            tbody.innerHTML = '';
+            
+            if (data.length > 0) {
+                data.forEach(deadline => {
+                    const row = document.createElement('tr');
+                    
+                    // Color the row based on days left
+                    if (deadline.days_left <= 3) {
+                        row.classList.add('table-danger');
+                    } else if (deadline.days_left <= 7) {
+                        row.classList.add('table-warning');
+                    }
+                    
+                    row.innerHTML = `
+                        <td>${deadline.title}</td>
+                        <td>${deadline.type}</td>
+                        <td>${deadline.due_date}</td>
+                        <td><strong>${deadline.days_left}</strong> jour${deadline.days_left > 1 ? 's' : ''}</td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+            } else {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="4" class="text-center">Aucune échéance à venir</td>';
+                tbody.appendChild(row);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching deadlines:', error);
+            const tbody = document.querySelector('#upcoming-deadlines-table tbody');
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Erreur lors du chargement des échéances</td></tr>';
+        });
+});
+</script>
+{% endblock %}

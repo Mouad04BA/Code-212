@@ -1,0 +1,150 @@
+/* Dark Mode Styles */
+body.dark-mode {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+body.dark-mode .site-header {
+  background-color: var(--dark-card);
+}
+
+body.dark-mode .sidebar {
+  background-color: var(--dark-sidebar);
+}
+
+body.dark-mode .sidebar-menu a {
+  color: var(--dark-text);
+}
+
+body.dark-mode .sidebar-menu a:hover, 
+body.dark-mode .sidebar-menu a.active {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .card {
+  background-color: var(--dark-card);
+}
+
+body.dark-mode .card-header {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-bottom-color: var(--dark-border);
+}
+
+body.dark-mode .card-footer {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-top-color: var(--dark-border);
+}
+
+body.dark-mode .table th,
+body.dark-mode .table td {
+  border-top-color: var(--dark-border);
+}
+
+body.dark-mode .table thead th {
+  border-bottom-color: var(--dark-border);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+body.dark-mode .form-control {
+  background-color: #333;
+  color: var(--dark-text);
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .form-control:focus {
+  color: var(--dark-text);
+  background-color: #444;
+  border-color: var(--primary-color);
+}
+
+body.dark-mode .dark-mode-toggle {
+  background-color: #666;
+}
+
+body.dark-mode .dark-mode-toggle:before {
+  left: calc(100% - 25px);
+  background-color: #ddd;
+}
+
+body.dark-mode a {
+  color: #e7a139;
+}
+
+body.dark-mode a:hover {
+  color: #f5b761;
+}
+
+body.dark-mode .stats-card {
+  background: linear-gradient(to right, var(--dark-card), var(--dark-card));
+}
+
+body.dark-mode .notifications-dropdown {
+  background-color: var(--dark-card);
+}
+
+body.dark-mode .notification-item {
+  border-bottom-color: var(--dark-border);
+}
+
+body.dark-mode .notification-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .notification-item.unread {
+  background-color: rgba(var(--primary-color-rgb), 0.15);
+}
+
+body.dark-mode .notification-header,
+body.dark-mode .notification-footer {
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .calendar th {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .calendar td {
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .calendar .other-month {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+body.dark-mode .calendar .today {
+  background-color: rgba(var(--primary-color-rgb), 0.2);
+}
+
+body.dark-mode .calendar .event {
+  background-color: rgba(var(--primary-color-rgb), 0.25);
+}
+
+body.dark-mode .page-link {
+  color: var(--accent-color);
+  background-color: var(--dark-card);
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .page-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .page-item.active .page-link {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+body.dark-mode .page-item.disabled .page-link {
+  color: #888;
+  background-color: var(--dark-card);
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .auth-page {
+  background-color: var(--dark-bg);
+}

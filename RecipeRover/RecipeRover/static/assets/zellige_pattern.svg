@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+  <defs>
+    <pattern id="zellige" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+      <!-- Moroccan Zellige pattern - Octagon with Star -->
+      <path d="M50,0 L62.5,12.5 L87.5,12.5 L100,25 L100,50 L87.5,62.5 L87.5,87.5 L75,100 L50,100 L37.5,87.5 L12.5,87.5 L0,75 L0,50 L12.5,37.5 L12.5,12.5 L25,0 Z" 
+            fill="none" 
+            stroke="#c4161c" 
+            stroke-width="2" 
+            opacity="0.7"/>
+      
+      <!-- Star in the middle -->
+      <path d="M50,30 L58,48 L78,50 L64,64 L68,82 L50,74 L32,82 L36,64 L22,50 L42,48 Z" 
+            fill="none" 
+            stroke="#006233" 
+            stroke-width="2" 
+            opacity="0.7"/>
+      
+      <!-- Additional decorative elements -->
+      <circle cx="50" cy="50" r="5" fill="#e7a139" opacity="0.7"/>
+      
+      <!-- Small geometric shapes in corners -->
+      <rect x="10" y="10" width="10" height="10" fill="none" stroke="#006233" stroke-width="1.5" opacity="0.7"/>
+      <rect x="80" y="10" width="10" height="10" fill="none" stroke="#006233" stroke-width="1.5" opacity="0.7"/>
+      <rect x="10" y="80" width="10" height="10" fill="none" stroke="#006233" stroke-width="1.5" opacity="0.7"/>
+      <rect x="80" y="80" width="10" height="10" fill="none" stroke="#006233" stroke-width="1.5" opacity="0.7"/>
+    </pattern>
+  </defs>
+  
+  <!-- Apply the pattern to fill the SVG -->
+  <rect width="300" height="300" fill="url(#zellige)" />
+</svg>

@@ -1,0 +1,140 @@
+Parfait Mouad ! Voici un **prompt ultra détaillé** pour construire une **application web complète de comptabilité marocaine automatisée**, codée avec **Python** (Flask ou Django), intégrant toutes les fonctionnalités nécessaires à la gestion comptable, fiscale et légale d’une entreprise marocaine 🇲🇦 :
+
+---
+
+## 🧠 **Prompt complet à utiliser avec une IA ou pour ton cahier des charges**
+
+---
+
+**Sujet :**  
+Développe une application web intelligente de **comptabilité marocaine** en utilisant **Python** (avec Flask ou Django). L'application doit automatiser l’ensemble du processus comptable et fiscal selon les normes marocaines, en intégrant un **système d’authentification**, une **interface utilisateur claire/sombre**, des **animations**, une **base de données structurée**, et des **éléments visuels inspirés du Maroc**.
+
+---
+
+## 🎯 **Fonctionnalités principales à intégrer** :
+
+### 📘 1. Module comptable :
+Inclure les éléments suivants, **100% automatisés** :
+
+- **Bilan comptable** : actif (immobilisé, circulant, trésorerie), passif (fonds propres, dettes) – généré automatiquement.
+- **Journal comptable** : saisie manuelle ou automatique des écritures avec choix du compte à partir du Plan Comptable Marocain.
+- **Compte de produits et charges (CPC)**.
+- **Grand Livre** : répartition des écritures par compte avec totaux et filtres par date/période.
+- **Génération de fichiers PDF ou Excel** pour tous les documents.
+
+### 🧮 2. Calcul fiscal intelligent :
+Mettre en place le **calcul automatique et en temps réel** des impôts suivants, selon la législation marocaine :
+
+- **TVA** : collecte / déduction / TVA due, selon les taux marocains (20%, 14%, 10%, 7%).
+- **IS** (Impôt sur les sociétés) avec barème progressif :
+  - 10% pour bénéfices ≤ 300 000 MAD
+  - 20% jusqu’à 1 000 000 MAD
+  - 31% au-delà, etc.
+- **IR** : selon les tranches salariales et professions libérales.
+
+### 📅 3. Gestion des échéances :
+- Rappels automatiques (notifications + interface) pour :
+  - Paiement des **clients** et des **fournisseurs**.
+  - Dépôt des **déclarations fiscales** (TVA mensuelle/trimestrielle, IS, IR).
+  - Paiement CNSS, CIMR, DGI...
+- Intégration d’un **calendrier fiscal marocain** interactif.
+
+### 📚 4. Plan Comptable Marocain :
+- Intégrer le **plan comptable général marocain (PCM)**.
+- Lister tous les **comptes par classe** (1 à 7).
+- Permettre la suggestion automatique de comptes selon la nature de l’écriture.
+
+---
+
+## 🔐 Authentification :
+
+- Système de **Login / Signup / Logout** avec rôles :
+  - `Admin` (accès total)
+  - `Comptable` (écriture/lecture)
+  - `Utilisateur` (lecture seulement)
+- Sécurité par **JWT ou sessions**.
+
+---
+
+## 💾 Base de données relationnelle (SQL) :
+
+- Utiliser **SQLite** (pour dev) ou **PostgreSQL/MySQL** (prod).
+- Tables :
+  - `users`, `clients`, `fournisseurs`
+  - `journal_entries`, `accounts`, `invoices`
+  - `cpc_entries`, `balances`, `taxes`
+  - `deadlines`, `reminders`, etc.
+
+---
+
+## 💻 Interface Frontend (HTML/CSS avec Python) :
+
+- **Light mode / Dark mode** activable via bouton.
+- Animations fluides (transitions, apparitions, mouvements).
+- Images et illustrations **liées à la culture marocaine** :
+  - Zellige, drapeau 🇲🇦, motifs berbères, architecture, etc.
+- Responsive design (mobile/desktop).
+
+---
+
+## 🧰 Stack technique suggéré :
+
+| Élément | Technologie |
+|--------|-------------|
+| Backend | Python (Flask ou Django) |
+| Frontend | HTML/CSS, JavaScript, Jinja (ou Django templates) |
+| Auth | Flask-Login, Django Auth, ou JWT |
+| DB | SQLite → PostgreSQL |
+| Export | FPDF / ReportLab / Pandas (PDF, Excel) |
+| OCR (optionnel) | Tesseract (lecture de factures) |
+| Animations | CSS keyframes / JS transitions |
+| UI | Bootstrap, Tailwind, ou design maison |
+
+---
+
+## 📁 Structure de projet (exemple avec Flask) :
+
+```
+/compta_maroc
+│
+├── /static/           # Images marocaines, styles, animations
+├── /templates/        # HTML files
+├── /models/           # Modèles SQLAlchemy
+├── /routes/           # Routes Flask
+├── /utils/            # Calculs TVA, IR, IS
+├── /plan_comptable/   # Données du PCM (JSON ou SQL)
+│
+├── app.py             # Application principale Flask
+├── config.py          # Configuration globale
+└── requirements.txt
+```
+
+---
+
+## 🧪 Exemple de fonctionnalités automatisées :
+- Saisir une facture d’achat → l’écriture comptable + TVA sont générées.
+- Saisir un encaissement client → mise à jour auto du grand livre + rappel désactivé.
+- En fin de mois → tableau synthèse CPC + IS simulé.
+- Alertes email quand une échéance approche (via SMTP).
+
+---
+
+## 🚀 À ajouter :
+
+- Upload de factures (PDF ou image) + lecture automatique (OCR).
+- Graphiques : statistiques mensuelles de dépenses/recettes.
+- Interface multilingue (🇫🇷 🇦🇪 🇬🇧 ?).
+- Mode test / bac à sable pour débutants.
+
+---
+
+## 🔓 Si tu veux un code de démarrage (login, base de données, dark/light) :
+Je peux te générer tout ça ! Tu veux que je commence par :
+
+- `authentification` (login/signup/logout) ?
+- `bilan + journal` ?
+- `calcul TVA/IS/IR` ?
+- `UI clair/sombre avec style marocain` ?
+- `plan comptable marocain en JSON/DB` ?
+
+Dis-moi ton ordre de priorité et je te code ça direct 💪🇲🇦

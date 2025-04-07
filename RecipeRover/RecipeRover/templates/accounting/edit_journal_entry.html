@@ -1,0 +1,174 @@
+{% extends 'layout.html' %}
+
+{% block title %}Modifier l'écriture{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Modifier l'écriture #{{ entry.id }}</h1>
+    <a href="{{ url_for('accounting.journal') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Retour
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Informations générales</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('accounting.edit_journal_entry', entry_id=entry.id) }}">
+            {{ form.hidden_tag() }}
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ form.date.label }}
+                        {{ form.date(class="form-control datepicker") }}
+                        {% if form.date.errors %}
+                            {% for error in form.date.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ form.reference.label }}
+                        {{ form.reference(class="form-control") }}
+                        {% if form.reference.errors %}
+                            {% for error in form.reference.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Créé par</label>
+                        <input type="text" class="form-control" value="{{ entry.created_by.username }}" readonly>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                {{ form.description.label }}
+                {{ form.description(class="form-control", rows=3) }}
+                {% if form.description.errors %}
+                    {% for error in form.description.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Enregistrer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5>Lignes d'écriture</h5>
+        <div id="balance-status" class="{% if is_balanced %}text-success{% else %}text-danger{% endif %}">
+            {% if is_balanced %}
+                <i class="fas fa-check-circle"></i> Écriture équilibrée
+            {% else %}
+                <i class="fas fa-exclamation-circle"></i> Écriture non équilibrée
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="journal-lines">
+                <thead>
+                    <tr>
+                        <th>Compte</th>
+                        <th>Libellé</th>
+                        <th class="text-right">Débit</th>
+                        <th class="text-right">Crédit</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for line in entry.lines %}
+                    <tr data-id="{{ line.id }}">
+                        <td>{{ line.account.code }} - {{ line.account.name }}</td>
+                        <td>{{ line.description or '' }}</td>
+                        <td class="text-right">{{ line.debit|round(2)|number_format(2, ',', ' ') }}</td>
+                        <td class="text-right">{{ line.credit|round(2)|number_format(2, ',', ' ') }}</td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-sm btn-danger delete-line" data-id="{{ line.id }}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="table-active">
+                        <th colspan="2" class="text-right">Totaux</th>
+                        <th class="text-right" id="total-debit">{{ total_debit|round(2)|number_format(2, ',', ' ') }}</th>
+                        <th class="text-right" id="total-credit">{{ total_credit|round(2)|number_format(2, ',', ' ') }}</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="text-right">Différence</th>
+                        <th colspan="2" class="text-center {% if is_balanced %}text-success{% else %}text-danger{% endif %}">
+                            <span id="balance">{{ (total_debit - total_credit)|abs|round(2) }}</span> MAD
+                        </th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <hr>
+        
+        <h5>Ajouter une ligne</h5>
+        <form id="add-line-form" action="{{ url_for('accounting.add_journal_entry_line', entry_id=entry.id) }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" id="entry_id" value="{{ entry.id }}">
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ line_form.account_id.label }}
+                        {{ line_form.account_id(class="form-control") }}
+                        <span id="account_id-error" class="text-danger" style="display: none;"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        {{ line_form.debit.label }}
+                        {{ line_form.debit(class="form-control", placeholder="0.00") }}
+                        <span id="debit-error" class="text-danger" style="display: none;"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        {{ line_form.credit.label }}
+                        {{ line_form.credit(class="form-control", placeholder="0.00") }}
+                        <span id="credit-error" class="text-danger" style="display: none;"></span>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button type="submit" class="btn btn-success btn-block">
+                            <i class="fas fa-plus"></i> Ajouter
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                {{ line_form.description.label }}
+                {{ line_form.description(class="form-control", placeholder="Description optionnelle") }}
+                <span id="description-error" class="text-danger" style="display: none;"></span>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

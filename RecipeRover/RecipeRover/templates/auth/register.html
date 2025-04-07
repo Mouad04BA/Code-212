@@ -1,0 +1,81 @@
+{% extends 'layout.html' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block auth_content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card auth-card">
+            <div class="card-header">
+                <h2 class="text-center">Inscription</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="form-group">
+                        {{ form.username.label }}
+                        {{ form.username(class="form-control", placeholder="Entrez votre nom d'utilisateur") }}
+                        {% if form.username.errors %}
+                            {% for error in form.username.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form.email.label }}
+                        {{ form.email(class="form-control", placeholder="Entrez votre email") }}
+                        {% if form.email.errors %}
+                            {% for error in form.email.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form.password.label }}
+                        {{ form.password(class="form-control", placeholder="Entrez votre mot de passe") }}
+                        {% if form.password.errors %}
+                            {% for error in form.password.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form.password_confirm.label }}
+                        {{ form.password_confirm(class="form-control", placeholder="Confirmez votre mot de passe") }}
+                        {% if form.password_confirm.errors %}
+                            {% for error in form.password_confirm.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    {% if current_user.is_authenticated and current_user.is_admin() %}
+                    <div class="form-group">
+                        {{ form.role.label }}
+                        {{ form.role(class="form-control") }}
+                        {% if form.role.errors %}
+                            {% for error in form.role.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% else %}
+                        {{ form.role(style="display: none;") }}
+                    {% endif %}
+                    
+                    <div class="form-group">
+                        {{ form.submit(class="btn btn-primary btn-block") }}
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <p>Vous avez déjà un compte ? <a href="{{ url_for('auth.login') }}">Se connecter</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

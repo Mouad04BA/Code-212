@@ -1,0 +1,111 @@
+{% extends 'layout.html' %}
+
+{% block title %}Détail de l'écriture{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Détail de l'écriture #{{ entry.id }}</h1>
+    <div>
+        {% if current_user.is_comptable() %}
+        <a href="{{ url_for('accounting.edit_journal_entry', entry_id=entry.id) }}" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Modifier
+        </a>
+        {% endif %}
+        <a href="{{ url_for('accounting.journal') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Informations générales</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                <p><strong>Date :</strong> {{ entry.date.strftime('%d/%m/%Y') }}</p>
+            </div>
+            <div class="col-md-3">
+                <p><strong>Référence :</strong> {{ entry.reference or '-' }}</p>
+            </div>
+            <div class="col-md-3">
+                <p><strong>Créé par :</strong> {{ entry.created_by.username }}</p>
+            </div>
+            <div class="col-md-3">
+                <p><strong>Créé le :</strong> {{ entry.created_at.strftime('%d/%m/%Y %H:%M') }}</p>
+            </div>
+        </div>
+        {% if entry.description %}
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <p><strong>Description :</strong></p>
+                <p>{{ entry.description }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5>Lignes d'écriture</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Compte</th>
+                        <th>Libellé</th>
+                        <th class="text-right">Débit</th>
+                        <th class="text-right">Crédit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set total_debit = namespace(value=0) %}
+                    {% set total_credit = namespace(value=0) %}
+                    
+                    {% for line in entry.lines %}
+                    <tr>
+                        <td>{{ line.account.code }} - {{ line.account.name }}</td>
+                        <td>{{ line.description or entry.description or '-' }}</td>
+                        <td class="text-right">
+                            {% if line.debit > 0 %}
+                                {{ line.debit|round(2)|number_format(2, ',', ' ') }}
+                                {% set total_debit.value = total_debit.value + line.debit %}
+                            {% endif %}
+                        </td>
+                        <td class="text-right">
+                            {% if line.credit > 0 %}
+                                {{ line.credit|round(2)|number_format(2, ',', ' ') }}
+                                {% set total_credit.value = total_credit.value + line.credit %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="table-active">
+                        <th colspan="2" class="text-right">Totaux</th>
+                        <th class="text-right">{{ total_debit.value|round(2)|number_format(2, ',', ' ') }}</th>
+                        <th class="text-right">{{ total_credit.value|round(2)|number_format(2, ',', ' ') }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div class="mt-3">
+            {% if total_debit.value == total_credit.value %}
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> L'écriture est équilibrée.
+                </div>
+            {% else %}
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle"></i> L'écriture n'est pas équilibrée. Différence : {{ (total_debit.value - total_credit.value)|abs|round(2)|number_format(2, ',', ' ') }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

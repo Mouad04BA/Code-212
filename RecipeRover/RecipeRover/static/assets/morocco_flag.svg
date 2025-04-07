@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200">
+  <!-- Background - Red field -->
+  <rect width="300" height="200" fill="#c4161c"/>
+  
+  <!-- Green pentagram (The Star) -->
+  <path d="M150,80 L168,134 L125,100 L175,100 L132,134 Z" 
+        fill="none" 
+        stroke="#006233" 
+        stroke-width="5"/>
+</svg>
